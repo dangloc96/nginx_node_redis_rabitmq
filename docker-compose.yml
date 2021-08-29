@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5673:5672
+      - 15673:15672
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+      - ./log/rabbitmq:/var/log/rabbitmq
+  redis-server:
+    image: redis
+  nodeserver:
+    build:
+      context: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./log/app:/var/log/app
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./log/nginx/:/var/log/nginx/
